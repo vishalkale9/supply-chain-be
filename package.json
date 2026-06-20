@@ -1,0 +1,25 @@
+{
+  "name": "supply-chain-be",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vishalkale9/supply-chain-be.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/vishalkale9/supply-chain-be/issues"
+  },
+  "homepage": "https://github.com/vishalkale9/supply-chain-be#readme",
+  "dependencies": {
+    "express": "^5.2.1",
+    "mongoose": "^9.7.1"
+  }
+}
