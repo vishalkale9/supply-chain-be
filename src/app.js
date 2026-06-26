@@ -1,16 +1,25 @@
 import express from "express";
+import cors from "cors";
+
+// Import Routes
 import authRoutes from "./routes/auth.routes.js";
+import productRoutes from "./routes/product.routes.js";
+import orderRoutes from "./routes/order.routes.js";
 
 const app = express();
 
 // Middlewares
-app.use(express.json());
+app.use(cors()); // Enable CORS for frontend connection
+app.use(express.json()); // Parse JSON bodies
 
-// Routes
+// Mount Routes
 app.use('/api/auth', authRoutes);
+app.use('/api/products', productRoutes);
+app.use('/api/orders', orderRoutes);
 
+//health api
 app.get("/", (req, res) => {
-    res.send("server running");
+    res.send("Server is running perfectly! 🚀");
 });
 
 export default app;
