@@ -87,6 +87,21 @@ export const updateOrderStatus = async (orderId, status, userRole) => {
 
     order.orderStatus = status;
     await order.save();
+
+    // Publish event to RabbitMQ
+    try {
+        const { publishMessage } = await import('../utils/rabbitmq.js');
+        const notificationPayload = {
+            userId: order.buyerId, 
+            message: `Your order status changed to ${status}`,
+            orderId: order._id,
+            type: 'ORDER_UPDATE'
+        };
+        await publishMessage('notification_queue', notificationPayload);
+    } catch (err) {
+        console.error('Failed to publish notification:', err);
+    }
+
     return order;
 };
 
