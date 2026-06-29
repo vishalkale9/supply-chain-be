@@ -51,9 +51,10 @@ export const getSingleOrder = async (req, res) => {
 export const updateStatus = async (req, res) => {
     try {
         const { id } = req.params;
-        const { status } = req.body; // Expecting { "status": "Shipped" } in the request body
+        const { status } = req.body;
+        const userRole = req.user.role; // Extract user role from auth middleware
 
-        const updatedOrder = await updateOrderStatus(id, status);
+        const updatedOrder = await updateOrderStatus(id, status, userRole);
 
         res.status(200).json({ success: true, message: 'Order status updated successfully', data: updatedOrder });
     } catch (error) {

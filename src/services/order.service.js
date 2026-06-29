@@ -47,20 +47,46 @@ export const getOrderById = async (orderId) => {
 };
 
 // 4. Update the status of an order (e.g., when Transporter delivers it)
-export const updateOrderStatus = async (orderId, status) => {
+export const updateOrderStatus = async (orderId, status, userRole) => {
     const validStatuses = ['PENDING', 'ACCEPTED', 'IN_TRANSIT_TO_WAREHOUSE', 'AT_WAREHOUSE', 'OUT_FOR_DELIVERY', 'DELIVERED'];
 
     if (!validStatuses.includes(status)) {
         throw new Error('Invalid order status');
     }
-    const order = await Order.findByIdAndUpdate(
-        orderId,
-        { orderStatus: status },
-        { new: true, runValidators: true }
-    );
+
+    const order = await Order.findById(orderId);
     if (!order) {
         throw new Error('Order not found');
     }
+
+    const currentState = order.orderStatus;
+    let isAuthorized = false;
+
+    // State Machine Rules based on Role
+    if (userRole === 'SuperAdmin') {
+        isAuthorized = true;
+    } else if (userRole === 'Supplier') {
+        if ((currentState === 'PENDING' && status === 'ACCEPTED') ||
+            (currentState === 'ACCEPTED' && status === 'IN_TRANSIT_TO_WAREHOUSE')) {
+            isAuthorized = true;
+        }
+    } else if (userRole === 'WarehouseManager') {
+        if ((currentState === 'IN_TRANSIT_TO_WAREHOUSE' && status === 'AT_WAREHOUSE') ||
+            (currentState === 'AT_WAREHOUSE' && status === 'OUT_FOR_DELIVERY')) {
+            isAuthorized = true;
+        }
+    } else if (userRole === 'Transporter') {
+        if (currentState === 'OUT_FOR_DELIVERY' && status === 'DELIVERED') {
+            isAuthorized = true;
+        }
+    }
+
+    if (!isAuthorized) {
+        throw new Error(`Unauthorized transition: ${userRole} cannot move order from ${currentState} to ${status}`);
+    }
+
+    order.orderStatus = status;
+    await order.save();
     return order;
 };
 
