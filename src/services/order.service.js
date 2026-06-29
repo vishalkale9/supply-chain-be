@@ -48,7 +48,7 @@ export const getOrderById = async (orderId) => {
 
 // 4. Update the status of an order (e.g., when Transporter delivers it)
 export const updateOrderStatus = async (orderId, status) => {
-    const validStatuses = ['Pending', 'Processing', 'Shipped', 'Delivered'];
+    const validStatuses = ['PENDING', 'ACCEPTED', 'IN_TRANSIT_TO_WAREHOUSE', 'AT_WAREHOUSE', 'OUT_FOR_DELIVERY', 'DELIVERED'];
 
     if (!validStatuses.includes(status)) {
         throw new Error('Invalid order status');

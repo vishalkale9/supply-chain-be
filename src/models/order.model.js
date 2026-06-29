@@ -32,8 +32,8 @@ const orderSchema = new mongoose.Schema({
     // 4. What is the status of the order?
     orderStatus: {
         type: String,
-        enum: ['Pending', 'Processing', 'Shipped', 'Delivered'],
-        default: 'Pending'
+        enum: ['PENDING', 'ACCEPTED', 'IN_TRANSIT_TO_WAREHOUSE', 'AT_WAREHOUSE', 'OUT_FOR_DELIVERY', 'DELIVERED'],
+        default: 'PENDING'
     }
 }, { timestamps: true });
 

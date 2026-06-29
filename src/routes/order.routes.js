@@ -23,7 +23,7 @@ router.get('/:id', protect, authorize('Buyer', 'Transporter', 'WarehouseManager'
 
 // 4. Update Order Status
 // Buyers CANNOT update status. Only the people handling the physical goods can update this!
-router.patch('/:id/status', protect, authorize('Transporter', 'WarehouseManager', 'SuperAdmin'), updateStatus);
+router.patch('/:id/status', protect, authorize('Supplier', 'Transporter', 'WarehouseManager', 'SuperAdmin'), updateStatus);
 
 // 5. Get Supplier's Orders
 // Only a 'Supplier' needs to see the orders placed for their products
