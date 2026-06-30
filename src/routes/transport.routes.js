@@ -6,17 +6,17 @@ import {
     getMyShipments,
     updateStatus
 } from '../controllers/transport.controller.js';
-import { verifyToken, authorizeRoles } from '../middlewares/auth.middleware.js';
+import { protect, authorize } from '../middlewares/auth.middleware.js';
 
 const router = express.Router();
 
 // Routes for Transporters and Admins
-router.post('/', verifyToken, authorizeRoles('SuperAdmin', 'Admin', 'Transporter', 'WarehouseManager'), createNewShipment);
-router.get('/transporter', verifyToken, authorizeRoles('Transporter', 'SuperAdmin', 'Admin'), getMyShipments);
-router.put('/:id/status', verifyToken, authorizeRoles('Transporter', 'SuperAdmin', 'Admin', 'WarehouseManager'), updateStatus);
+router.post('/', protect, authorize('SuperAdmin', 'Admin', 'Transporter', 'WarehouseManager'), createNewShipment);
+router.get('/transporter', protect, authorize('Transporter', 'SuperAdmin', 'Admin'), getMyShipments);
+router.put('/:id/status', protect, authorize('Transporter', 'SuperAdmin', 'Admin', 'WarehouseManager'), updateStatus);
 
 // Routes for viewing by any authenticated user (e.g. Buyer checking their order)
-router.get('/:id', verifyToken, getSingleShipment);
-router.get('/order/:orderId', verifyToken, getOrderShipment);
+router.get('/:id', protect, getSingleShipment);
+router.get('/order/:orderId', protect, getOrderShipment);
 
 export default router;
